@@ -1,0 +1,37 @@
+#setwd('C:/Users/Rahul/Dev/School/kings_case_comp')
+data <- read.csv('./data/pbp_info_2015-16.csv')
+head(data)
+
+
+# returns the confidence with which a player should be subbed out (0 to 1)
+sub_out_player <- function(game_clock, period, fouls, player_skill, win_prob=.5){
+  foul_trouble <- foul_trouble(game_clock, period, fouls)
+  return (1)
+}
+
+# returns how much foul trouble a player is in (0 to 1) based on current game conditions
+foul_trouble <- function(game_clock, period, fouls) {
+  game_clock_as_int <- (as.numeric(as.POSIXct(game_clock, format = '%M:%S')) - as.numeric(as.POSIXct('00:00', format = '%M:%S')))/60
+  time_remaining <- (4-period) * 12 + game_clock_as_int
+  
+  foul_trouble_data <- read.csv('./foul_trouble_data.csv')
+  foul_trouble_model <- lm(X0.1 ~ X45 + X1, data=foul_trouble_data)
+  
+  
+  intercept <- foul_trouble_model$coefficients[1]
+  time_coefficient <- foul_trouble_model$coefficients[2]
+  foul_coefficient <- foul_trouble_model$coefficients[3]
+  
+  val <- intercept + (time_coefficient * time_remaining) + (foul_coefficient * fouls)
+  min_val <- intercept
+  max_val <- intercept + (time_coefficient * 48) + (foul_coefficient * 5)
+
+  return ((val - min_val) / (max_val - min_val))
+}
+
+
+foul_trouble('0:00', 4, 0)
+foul_trouble('12:00', 1, 5)
+foul_trouble('3:00', 2, 4)
+
+
