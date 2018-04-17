@@ -1,7 +1,8 @@
 import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup
-
+import pandas as pd
+import os
 
 season = '2015'
 month = '03'
@@ -21,6 +22,7 @@ soup = BeautifulSoup(html_source, 'html.parser')
 print(soup.find('td', {'onmouseover': 'tooltip.show(dMVP)'}).find_next_sibling('td').text)
 print(soup.find('td', {'onmouseover': 'tooltip.show(dLVP)'}).find_next_sibling('td').text)
 
+# TODO currently assumes 4 quarter game
 # print(soup.find('text', {'x': '32.5'}).parent.parent.find_next_sibling('g'))
 
 # x range: 45.5 - 865.5
@@ -41,5 +43,9 @@ for x, y in chart_data:
     cur_time = total_seconds - total_seconds * cur_time
     win_perct.append((cur_time, cur_win_perct))
 
-print(win_perct)
+df = pd.DataFrame(win_perct)
+df.columns = ['time', 'win_prob']
 
+if not os.path.isdir('./win_prob/'):
+    os.makedirs('./win_prob')
+df.to_csv('./win_prob/' + gid + '.csv', index=False)
