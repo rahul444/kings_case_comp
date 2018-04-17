@@ -1,10 +1,11 @@
 #setwd('C:/Users/Rahul/Dev/School/kings_case_comp')
+setwd('~/Desktop/kings_case_comp/')
 data <- read.csv('./data/pbp_info_2015-16.csv')
 head(data)
 
 
 # returns the confidence with which a player should be subbed out (0 to 1)
-sub_out_player <- function(game_clock, period, fouls, player_skill, win_prob=.5){
+sub_out_player <- function(game_clock, period, fouls, player_name, team_name, win_prob=.5){
   foul_trouble <- foul_trouble(game_clock, period, fouls)
   return (1)
 }

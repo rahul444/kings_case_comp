@@ -1,0 +1,88 @@
+---
+title: "casecomp"
+output: html_document
+---
+```{r}
+setwd('~/Desktop/kings_case_comp/')
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+lineup_14_15 = read.csv("./data/lineup_info_2014-15.csv")
+lineup_15_16 = read.csv("./data/lineup_info_2015-16.csv")
+lineup_16_17 = read.csv("./data/lineup_info_2016-17.csv")
+```
+
+```{r}
+pbp_14_15 = read.csv("./data/pbp_info_2014-15.csv")
+pbp_15_16 = read.csv("./data/pbp_info_2015-16.csv")
+pbp_16_17 = read.csv("./data/pbp_info_2016-17.csv")
+```
+
+```{r}
+player = read.table("./data/player.csv", sep = ',', stringsAsFactors = FALSE, header = TRUE)
+schedule = read.csv("./data/schedule.csv")
+team = read.csv("./data/team.csv")
+```
+
+```{r}
+head(lineup_14_15)
+head(lineup_15_16)
+head(lineup_16_17)
+```
+
+```{r}
+head(pbp_14_15)
+```
+
+```{r}
+head(pbp_15_16)
+```
+
+```{r}
+head(pbp_16_17)
+```
+
+```{r}
+head(player)
+head(schedule)
+head(team)
+```
+
+```{r}
+game_21401127 = pbp_14_15 %>% filter(game_id == 21401127)
+```
+
+```{r}
+players_14_15 = player %>% filter(season == '2014-15')
+player_names = paste(players_14_15$first_name, players_14_15$last_name, sep = ' ')
+players_14_15$Name = player_names
+head(players_14_15)
+
+players_15_16 = player %>% filter(season == '2015-16')
+player_names = paste(players_15_16$first_name, players_15_16$last_name, sep = ' ')
+players_15_16$Name = player_names
+head(players_15_16)
+```
+
+```{r}
+ratings_14_15 = read.table('./2k_14_15.csv', sep = ',', stringsAsFactors = FALSE, header = TRUE)
+```
+
+```{r}
+master_14_15 = inner_join(ratings_14_15, players_14_15, by = 'Name')
+head(master_14_15)
+```
+
+```{r}
+ratings_15_16 = read.csv('./2k_15_16.csv', header = TRUE)
+ratings_15_16 = subset(ratings_15_16, select = c(PLAYERS, NBA.2K16))
+colnames(ratings_15_16) = c('Name', 'Rating')
+head(ratings_15_16)
+```
+
+```{r}
+master_15_16 = full_join(ratings_15_16, players_15_16, by = 'Name')
+head(master_15_16)
+```
