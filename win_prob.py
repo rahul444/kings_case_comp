@@ -2,7 +2,6 @@ import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
-import os
 
 season = '2015'
 month = '03'
@@ -45,7 +44,4 @@ for x, y in chart_data:
 
 df = pd.DataFrame(win_perct)
 df.columns = ['time', 'win_prob']
-
-if not os.path.isdir('./win_prob/'):
-    os.makedirs('./win_prob')
 df.to_csv('./win_prob/' + gid + '.csv', index=False)
