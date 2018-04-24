@@ -1,0 +1,79 @@
+---
+title: "nba_data"
+output: html_document
+---
+
+```{r}
+setwd('~/Desktop/kings_case_comp/')
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+lineup_14_15 = read.csv("./data/lineup_info_2014-15.csv")
+lineup_15_16 = read.csv("./data/lineup_info_2015-16.csv")
+lineup_16_17 = read.csv("./data/lineup_info_2016-17.csv")
+pbp_14_15 = read.csv("./data/pbp_info_2014-15.csv")
+pbp_15_16 = read.csv("./data/pbp_info_2015-16.csv")
+pbp_16_17 = read.csv("./data/pbp_info_2016-17.csv")
+player = read.table("./data/player.csv", sep = ',', stringsAsFactors = FALSE, header = TRUE)
+schedule = read.csv("./data/schedule.csv")
+team = read.csv("./data/team.csv")
+```
+
+```{r}
+players_14_15 = player %>% filter(season == '2014-15')
+player_names = paste(players_14_15$first_name, players_14_15$last_name, sep = ' ')
+players_14_15$Name = tolower(player_names)
+
+players_15_16 = player %>% filter(season == '2015-16')
+player_names = paste(players_15_16$first_name, players_15_16$last_name, sep = ' ')
+players_15_16$Name = tolower(player_names)
+
+players_16_17 = player %>% filter(season == '2016-17')
+player_names = paste(players_16_17$first_name, players_16_17$last_name, sep = ' ')
+players_16_17$Name = tolower(player_names)
+
+head(players_14_15)
+head(players_15_16)
+head(players_16_17)
+```
+
+```{r}
+regular_14_15 = read.csv("./data/nba15_regular.csv")
+advanced_14_15 = read.csv("./data/nba15_advanced.csv")
+stats_14_15 = inner_join(regular_14_15, advanced_14_15, by = 'Player')
+stats_14_15$Player = tolower(stats_14_15$Player)
+stats_14_15$Player = gsub("\\\\.*","",stats_14_15$Player)
+head(stats_14_15)
+```
+
+```{r}
+regular_15_16 = read.csv("./data/nba16_regular.csv")
+advanced_15_16 = read.csv("./data/nba16_advanced.csv")
+stats_15_16 = inner_join(regular_15_16, advanced_15_16, by = 'Player')
+stats_15_16$Player = tolower(stats_15_16$Player)
+stats_15_16$Player = gsub("\\\\.*","",stats_15_16$Player)
+head(stats_15_16)
+```
+
+```{r}
+regular_16_17 = read.csv("./data/nba17_regular.csv")
+advanced_16_17 = read.csv("./data/nba17_advanced.csv")
+stats_16_17 = inner_join(regular_16_17, advanced_16_17, by = 'Player')
+stats_16_17$Player = tolower(stats_16_17$Player)
+stats_16_17$Player = gsub("\\\\.*","",stats_16_17$Player)
+head(stats_16_17)
+```
+
+
+```{r}
+master_14_15 = merge(players_14_15, stats_14_15, by.x = 'Name', by.y = 'Player')
+master_14_15 = unique(master_14_15)
+
+master_15_16 = merge(players_15_16, stats_15_16, by.x = 'Name', by.y = 'Player')
+master_15_16 = unique(master_15_16)
+
+master_16_17 = merge(players_16_17, stats_16_17, by.x = 'Name', by.y = 'Player')
+master_16_17 = unique(master_16_17)
+```
