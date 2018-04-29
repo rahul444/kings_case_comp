@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 
-season = '2015'
-pbp = pd.read_csv('./data/pbp_info_2015-16.csv')
+season = '2016'
+pbp = pd.read_csv('./data/pbp_info_2016-17.csv')
 
 for i, row in pbp[pbp['event_number'] == 0].iterrows():
-    if i > 10:
-        break
+    # if i > 10:
+    #     break
     
     gid = str(row['game_id'])
     date = row['event_timestamp_utc'].split()[0]
