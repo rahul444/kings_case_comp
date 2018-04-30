@@ -28,6 +28,13 @@ def foul_trouble(min_remaining, fouls):
 def opportunity_cost():
     return 1
 
+def win_probaiblity(time, filename):
+    wp = pd.read_csv('./win_prob/2016/' + filename)
+    for row in wp.iterrows():
+        if row[1][0] > time:
+            return row[1][1]
+    return 0.5
+
 pbp = pd.read_csv('./data/pbp_info_2016-17.csv')
 for filename in os.listdir('./win_prob/2016/'):
     print(filename)
@@ -35,6 +42,7 @@ for filename in os.listdir('./win_prob/2016/'):
     game = pbp[pbp['game_id'] == int(game_id)]
     foul_plays = game[game['description'].str.contains('Foul:')]
     num_periods = game['period'].max()
+    total_seconds = (48 + (num_periods - 4) * 5) * 60
     
     for foul_play in foul_plays.iterrows():
         desc = foul_play[1][14]
@@ -49,12 +57,19 @@ for filename in os.listdir('./win_prob/2016/'):
         if period < 5:
             min_remaining = (12 * (4 - period)) + min_remaining_in_q
         min_remaining = min_remaining_in_q
+        seconds_elapsed = total_seconds - (60 * min_remaining)
 
         cur_foul_trouble = foul_trouble(min_remaining, num_fouls)
-        win_prob = 0.5
+        win_prob = win_probaiblity(seconds_elapsed, filename)
         opportunity_cost = 1
 
-    print(len(game))
-    print(len(foul_plays))
-
+        print(cur_foul_trouble)
+        print(win_prob)
+        if win_prob > 0.75:
+            pass
+        elif win_prob < 0.25:
+            pass
+        else:
+            pass
+            
     break
